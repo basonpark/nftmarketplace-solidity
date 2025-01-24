@@ -29,8 +29,8 @@ const style = {
   statsContainer: `w-[44vw] flex justify-between py-4 border border-[#151b22] rounded-xl mb-4`,
   collectionStat: `w-1/4`,
   statValue: `text-3xl font-bold w-full flex items-center justify-center text-white/75`,
-  ethLogo: `h-6 mr-2 object-contain`,
-  statName: `text-lg w-full text-center mt-1 text-white/75`,
+  ethLogo: `h-6 object-contain`,
+  statName: `text-lg w-full text-center items-center mt-1 text-white/75`,
   description: `text-[#8a939b] text-xl w-max-1/4 flex-wrap mt-4`,
 }
 
@@ -60,13 +60,27 @@ const Collection = () => {
 
     //get all listings in collection
     useEffect(() => {
-      if (!marketPlaceContract) return
-      ;(async () => {
-        const listings = await marketPlaceContract.directListings.getAll()
-        console.log("listings: " + JSON.stringify(listings, null, 2))
-        setListings(listings)
-      })()
-    }, [marketPlaceContract])
+      if (!marketPlaceContract || !nftContract) return
+      
+      const fetchListings = async () => {
+        try {
+          const listings = await marketPlaceContract.directListings.getAll()
+          
+          // Filter listings for current collection
+          const collectionListings = listings.filter(
+            listing => listing.assetContractAddress.toLowerCase() === collectionId.toLowerCase()
+          )
+          
+          console.log("Collection listings:", collectionListings)
+          setListings(collectionListings)
+        } catch (error) {
+          console.error("Error fetching listings:", error)
+          setListings([])
+        }
+      }
+
+      fetchListings()
+    }, [marketPlaceContract, nftContract, collectionId])
 
 
     //get collections data
@@ -190,7 +204,7 @@ const Collection = () => {
             <div className={style.description}>{collection?.description}</div>
           </div>
         </div>
-        <div className="flex flex-wrap ">
+        <div className="flex flex-wrap justify-center">
           {nfts.map((nftItem, id) => (
             <NFTCard
               key={id}

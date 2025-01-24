@@ -7,7 +7,7 @@ import ethLogo from '@/assets/eth-logo.png'
 
 
 const style = {
-    wrapper: `bg-[#303339] flex-auto w-[14rem] h-[22rem] my-10 mx-5 rounded-2xl overflow-hidden cursor-pointer`,
+    wrapper: `bg-[#303339] flex-grow-0 w-[14rem] h-[22rem] my-10 mx-5 rounded-2xl overflow-hidden cursor-pointer`,
     imgContainer: `h-2/3 w-full overflow-hidden flex justify-center items-center`,
     nftImg: `w-full object-cover`,
     details: `p-3`,
@@ -24,44 +24,52 @@ const style = {
   }
 
 const NFTCard = ({nftItem, title, listings}) => {
-
     const [isListed, setIsListed] = useState(false)
     const [price, setPrice] = useState(0)
     const router = useRouter()
 
     useEffect(() => {
-        const listing = listings.find((listing) => listing.asset.id === nftItem.id)
-        if (Boolean(listing)) {
-            setIsListed(true)
-            setPrice(listing.buyoutCurrencyValuePerToken.displayValue)
+        if (!listings || !nftItem) return
+        
+        const listing = listings.find((listing) => 
+            listing.asset.id.toString() === nftItem.metadata.id.toString()
+        );
+        
+        if (listing && listing.buyoutCurrencyValuePerToken) {
+            setIsListed(true);
+            setPrice(listing.buyoutCurrencyValuePerToken.displayValue);
+            console.log(`Found listing for NFT ${nftItem.metadata.id}:`, listing);
         }
-    }, [listings, nftItem])
+    }, [listings, nftItem]);
 
-    console.log("nftItem: " + JSON.stringify(nftItem, null, 2))
-    console.log("listings: " + JSON.stringify(listings, null, 2))
+    if (!nftItem?.metadata) return null
 
     return (
         <div 
         className={style.wrapper}
         onClick={() => {
-            router.push(`/collections/${nftItem.contractAddress}/${nftItem.id}`)
+            router.push(`/collections/nfts/${nftItem.metadata.id}?isListed=${isListed}`)
         }}
         >
         <div className={style.imgContainer}>
-            <img src={nftItem.imageUrl} alt={nftItem.name} className={style.nftImg} />
+            <img 
+                src={nftItem.metadata.image || 'https://via.placeholder.com/200'} 
+                alt={nftItem.metadata.name} 
+                className={style.nftImg} 
+            />
         </div>
         <div className={style.details}>
             <div className={style.info}>
                 <div className={style.infoLeft}>
                     <div className={style.collectionName}>{title}</div>
-                    <div className={style.assetName}>{nftItem.name}</div>
+                    <div className={style.assetName}>{nftItem.metadata.name}</div>
                 </div>
                 { isListed && (
                     <div className={style.infoRight}>
                         <div className={style.priceTag}>Price</div>
                         <div className={style.priceValue}>
                             <img src={ethLogo} alt='eth' className={style.ethLogo} />
-                            {listings?.length > 0 ? price : 'Not Listed'}
+                            {price}
                         </div>
                     </div>
                 )}
