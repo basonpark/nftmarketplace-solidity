@@ -1068,5 +1068,8 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "fsevents": "^2.3.3"
+  }
 }
