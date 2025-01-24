@@ -1,7 +1,5 @@
-
-
 /**
- * This configuration is used to for the Sanity Studio that’s mounted on the `/app/studio/[[...tool]]/page.jsx` route
+ * This configuration is used to for the Sanity Studio that's mounted on the `/app/studio/[[...tool]]/page.jsx` route
  */
 
 import {visionTool} from '@sanity/vision'
@@ -28,4 +26,8 @@ export default defineConfig({
     // https://www.sanity.io/docs/the-vision-plugin
     visionTool({defaultApiVersion: apiVersion}),
   ],
+  cors: {
+    origin: ['http://localhost:3001'],
+    credentials: true
+  }
 })

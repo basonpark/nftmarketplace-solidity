@@ -21,13 +21,19 @@
       {
         "name": "next"
       }
-    ]
+    ],
+    "paths": {  
+      "@/*": ["./src/*"],  
+      "@sanity/*": ["./src/sanity/*"]  
+    }
   },
   "include": [
     "next-env.d.ts",
     ".next/types/**/*.ts",
     "**/*.ts",
-    "**/*.tsx"
+    "**/*.tsx",
+    "src/app/collections/page.jsx",
+    "src/app/collections/[collectionId]/page.jsx"
   ],
   "exclude": [
     "node_modules"

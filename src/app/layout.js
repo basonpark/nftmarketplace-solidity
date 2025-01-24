@@ -12,8 +12,11 @@ export default function RootLayout({ children }) {
       <body>
         <ThirdwebProvider
           activeChain={sepoliaChain}
-          supportedChains={[Sepolia]}
           clientId={process.env.NEXT_PUBLIC_THIRDWEB_CLIENT_ID}
+          sdkOptions={{
+            chainId: Sepolia.chainId,
+            rpcUrl: `https://mainnet.infura.io/v3/${process.env.NEXT_PUBLIC_INFURA_PROJECT_ID}`
+          }}
         >
           {children}
         </ThirdwebProvider>
