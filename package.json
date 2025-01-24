@@ -1069,7 +1069,5 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "devDependencies": {
-    "fsevents": "^2.3.3"
-  }
+  "os": ["!darwin"]
 }
